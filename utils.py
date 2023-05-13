@@ -1,7 +1,7 @@
 import os
 
 from linebot import LineBotApi, WebhookParser
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from linebot.models import TextSendMessage
 
 channel_secret = os.environ.get("LINE_CHANNEL_SECRET")
 channel_access_token = os.environ.get("LINE_CHANNEL_ACCESS_TOKEN")
