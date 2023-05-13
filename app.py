@@ -57,11 +57,14 @@ def webhook_handler():
                     "show_fsm_pic",
                     "search_restaurant",
                     "add_favorite",
+                    "show_detail",
+                    "search_result",
                     "show_favorite",
                     "delete_favorite",
                     "introduction"],
                 transitions=[
                     # 呼叫主選單
+                    {"trigger": "advance" , "source": "search_result" , "dest": "menu" , "conditions": "is_going_to_menu",},
                     {"trigger": "advance" , "source": "user" , "dest": "menu" , "conditions": "is_going_to_menu",},
                     {"trigger": "advance" , "source": "menu" , "dest": "menu" , "conditions": "is_going_to_menu",},
                     {"trigger": "advance" , "source": "introduction" , "dest": "menu" , "conditions": "is_going_to_menu",},
@@ -70,6 +73,7 @@ def webhook_handler():
                     {"trigger": "advance" , "source": "add_favorite" , "dest": "menu" , "conditions": "is_going_to_menu",},
                     {"trigger": "advance" , "source": "search_restaurant" , "dest": "menu" , "conditions": "is_going_to_menu",},
                     {"trigger": "advance" , "source": "show_fsm_pic" , "dest": "menu" , "conditions": "is_going_to_menu",},
+                    {"trigger": "advance" , "source": "show_detail" , "dest": "menu" , "conditions": "is_going_to_menu",},
                     
                     {"trigger": "advance" , "source": "user" , "dest": "show_fsm_pic" , "conditions": "is_going_to_show_fsm_pic",},
                     {"trigger": "advance" , "source": "menu" , "dest": "show_fsm_pic" , "conditions": "is_going_to_show_fsm_pic",},
@@ -82,12 +86,16 @@ def webhook_handler():
                     {"trigger": "advance" , "source": "stock_input_key" , "dest": "search_restaurant" , "conditions": "is_going_to_search_restaurant",},
                     {"trigger": "advance" , "source": "menu" , "dest": "introduction" , "conditions": "is_going_to_introduction",},
                     # 回去重新輸入關鍵字
-                    {"trigger": "advance" , "source": "search_restaurant" , "dest": "input_key" , "conditions": "is_going_to_back_input_key",},
+                    {"trigger": "advance" , "source": ["search_restaurant" , "search_result"] , "dest": "input_key" , "conditions": "is_going_to_back_input_key",},
                     
-                    # 加入我的最愛
-                    {"trigger": "advance_postback" , "source": ["user" , "menu" , "search_restaurant"] , "dest": "add_favorite" , "conditions": "is_going_to_add_favorite",},
+                    # 顯示介紹
+                    {"trigger": "advance_postback" , "source": "search_restaurant" , "dest": "show_detail" , "conditions": "is_going_to_show_detail",},
                     # 返回查詢結果
-                    {"trigger": "advance" , "source": "add_favorite" , "dest": "search_restaurant" , "conditions": "is_going_to_back_search_restaurant",},
+                    {"trigger": "advance" , "source": "show_detail" , "dest": "search_result" , "conditions": "is_going_to_show_search_result",},
+                    # 加入我的最愛
+                    {"trigger": "advance_postback" , "source": ["user" , "menu" , "search_restaurant" , "search_result"] , "dest": "add_favorite" , "conditions": "is_going_to_add_favorite",},
+                    # 返回查詢結果
+                    {"trigger": "advance" , "source": "add_favorite" , "dest": "search_result" , "conditions": "is_going_to_show_search_result",},
 
                     # 查看最愛
                     {"trigger": "advance" , "source": ["user" , "menu"] , "dest" : "show_favorite" , "conditions": "is_going_to_show_favorite",},
@@ -111,8 +119,6 @@ def webhook_handler():
                 enter_postback = response
         print(f"\nFSM STATE: {machine_dict[event.source.user_id].state}")
         print(f"REQUEST BODY: \n{body}")
-        if (enter_postback == '輸入錯誤，請輸入你現在想去哪裡(請輸入正確的縣市名稱，且"台"請寫"臺"，例如臺北市、澎湖縣等等)'):
-            send_text_message(event.reply_token, '輸入錯誤，請輸入你現在想去哪裡(請輸入正確的縣市名稱，且"台"請寫"臺"，例如臺北市、澎湖縣等等)')
         if enter == False:
             if enter_postback == False:
                 send_text_message(event.reply_token, "請依照指示與按鈕來操作!")

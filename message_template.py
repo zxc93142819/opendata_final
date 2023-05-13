@@ -804,56 +804,6 @@ favorite_item = {
     },
 }
 
-add_reply = {
-  "type": "bubble",
-  "body": {
-    "type": "box",
-    "layout": "vertical",
-    "contents": [
-      {
-        "type": "text",
-        "text": "查無相關店家",
-        "weight": "bold",
-        "size": "xl",
-        "margin": "lg",
-        "align": "center"
-      }
-    ]
-  },
-  "footer": {
-    "type": "box",
-    "layout": "vertical",
-    "contents": [
-      {
-        "type": "button",
-        "style": "primary",
-        "action": {
-          "type": "message",
-          "label": "返回再查詢",
-          "text": "返回再查詢"
-        }
-      },
-      {
-        "type" : "separator"
-      },
-      {
-        "type": "button",
-        "style": "primary",
-        "action": {
-          "type": "message",
-          "label": "返回主選單",
-          "text": "主選單"
-        }
-      },
-    ]
-  },
-  "styles": {
-    "footer": {
-      "separator": True
-    }
-  }
-}
-
 delete_reply = {
   "type": "bubble",
   "body": {
@@ -1237,75 +1187,73 @@ site_item = {
       }
     },
     "body": {
-      "type": "box",
-      "layout": "vertical",
-      "contents": [
-        {
-          "type": "text",
-          "text": "Brown Cafe",
-          "weight": "bold",
-          "size": "xl",
-          "flex":1
-        },
-        {#["body"]["contents"][1]
-          "type": "box",
-          "layout": "vertical",
-          "margin": "lg",
-          "spacing": "sm",
-          "contents": [
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
             {
-              "type": "box",
-              "layout": "baseline",
-              "spacing": "sm",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "景點位置",
-                  "color": "#aaaaaa",
-                  "size": "sm",
-                  "flex": 2
-                },
-                {
-                  "type": "text",
-                  "text": "Miraina Tower, 4-1-6 Shinjuku, Tokyo",
-                  "wrap": True,
-                  "color": "#666666",
-                  "size": "sm",
-                  "flex": 5
-                }
-              ]
+            "type": "text",
+            "text": "Brown Cafe",
+            "weight": "bold",
+            "size": "xl"
             },
             {
-              "type": "box",
-              "layout": "baseline",
-              "spacing": "sm",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "景點介紹",
-                  "color": "#aaaaaa",
-                  "size": "sm",
-                  "flex": 2
-                },
-                {
-                  "type": "text",
-                  "text": " ",
-                  "wrap": True,
-                  "color": "#666666",
-                  "size": "sm",
-                  "flex": 5
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                "type": "box",
+                "layout": "vertical",
+                "margin": "lg",
+                "spacing": "sm",
+                "contents": [
+                    {
+                    "type": "box",
+                    "layout": "baseline",
+                    "spacing": "sm",
+                    "contents": [
+                        {
+                        "type": "text",
+                        "text": "營業時間",
+                        "color": "#aaaaaa",
+                        "size": "sm",
+                        "flex": 2
+                        },
+                        {
+                        "type": "text",
+                        "text": "10:00 - 23:00",
+                        "wrap": True,
+                        "color": "#666666",
+                        "size": "sm",
+                        "flex": 5
+                        }
+                    ]
+                    }
+                ]
+            },
+        ]
     },
     "footer": {
       "type": "box",
       "layout": "vertical",
       "spacing": "sm",
       "contents": [
+        {
+            "type": "button",
+            "style": "link",
+            "height": "sm",
+            "action": {
+                "type": "uri",
+                "label": "查看景點位置",
+                "uri": "https://linecorp.com"
+            }
+        },
+        # {
+        #     "type": "button",
+        #     "style": "link",
+        #     "height": "sm",
+        #     "action": {
+        #     "type": "postback",
+        #     "label": "了解景點介紹",
+        #     "data": "hello",
+        #     }
+        # },
         {
           "type": "button",
           "style": "link",
@@ -1315,7 +1263,7 @@ site_item = {
             "label": "加入最愛",
             "data": "hello",
           }
-        }
+        },
       ],
       "flex": 0
     },
@@ -1398,74 +1346,73 @@ favorite_item = {
       }
     },
     "body": {
-      "type": "box",
-      "layout": "vertical",
-      "contents": [
-        {
-          "type": "text",
-          "text": "Brown Cafe",
-          "weight": "bold",
-          "size": "xl"
-        },
-        {#["body"]["contents"][1]
-          "type": "box",
-          "layout": "vertical",
-          "margin": "lg",
-          "spacing": "sm",
-          "contents": [
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
             {
-              "type": "box",
-              "layout": "baseline",
-              "spacing": "sm",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "景點位置",
-                  "color": "#aaaaaa",
-                  "size": "sm",
-                  "flex": 2
-                },
-                {
-                  "type": "text",
-                  "text": "Miraina Tower, 4-1-6 Shinjuku, Tokyo",
-                  "wrap": True,
-                  "color": "#666666",
-                  "size": "sm",
-                  "flex": 5
-                }
-              ]
+            "type": "text",
+            "text": "Brown Cafe",
+            "weight": "bold",
+            "size": "xl"
             },
             {
-              "type": "box",
-              "layout": "baseline",
-              "spacing": "sm",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "景點介紹",
-                  "color": "#aaaaaa",
-                  "size": "sm",
-                  "flex": 2
-                },
-                {
-                  "type": "text",
-                  "text": "",
-                  "wrap": True,
-                  "color": "#666666",
-                  "size": "sm",
-                  "flex": 5
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                "type": "box",
+                "layout": "vertical",
+                "margin": "lg",
+                "spacing": "sm",
+                "contents": [
+                    {
+                    "type": "box",
+                    "layout": "baseline",
+                    "spacing": "sm",
+                    "contents": [
+                        {
+                        "type": "text",
+                        "text": "營業時間",
+                        "color": "#aaaaaa",
+                        "size": "sm",
+                        "flex": 2
+                        },
+                        {
+                        "type": "text",
+                        "text": "10:00 - 23:00",
+                        "wrap": True,
+                        "color": "#666666",
+                        "size": "sm",
+                        "flex": 5
+                        }
+                    ]
+                    }
+                ]
+            },
+        ]
     },
     "footer": {
       "type": "box",
       "layout": "vertical",
       "spacing": "sm",
       "contents": [
+        {
+            "type": "button",
+            "style": "link",
+            "height": "sm",
+            "action": {
+                "type": "uri",
+                "label": "查看景點位置",
+                "uri": "https://linecorp.com"
+            }
+        },
+        # {
+        #     "type": "button",
+        #     "style": "link",
+        #     "height": "sm",
+        #     "action": {
+        #     "type": "postback",
+        #     "label": "了解景點介紹",
+        #     "data": "hello",
+        #     }
+        # },
         {
           "type": "button",
           "style": "link",
@@ -1479,4 +1426,93 @@ favorite_item = {
       ],
       "flex": 0
     },
+}
+
+add_reply = {
+  "type": "bubble",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "查無相關店家",
+        "weight": "bold",
+        "size": "xl",
+        "margin": "lg",
+        "align": "center"
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "action": {
+          "type": "message",
+          "label": "返回查詢結果",
+          "text": "返回查詢結果"
+        }
+      },
+      {
+        "type" : "separator"
+      },
+      {
+        "type": "button",
+        "style": "primary",
+        "action": {
+          "type": "message",
+          "label": "返回主選單",
+          "text": "主選單"
+        }
+      },
+    ]
+  },
+}
+
+detail_item = {
+  "type": "bubble",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "Brown Cafe",
+        "weight": "bold",
+        "size": "xl"
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "button",
+        "style": "link",
+        "height": "sm",
+        "action": {
+          "type": "message",
+          "text": "返回查詢結果",
+          "label": "返回查詢結果"
+        }
+      },
+      {
+        "type": "button",
+        "style": "link",
+        "height": "sm",
+        "action": {
+          "type": "message",
+          "label": "返回主選單",
+          "text": "主選單"
+        }
+      }
+    ],
+    "flex": 0
+  }
 }

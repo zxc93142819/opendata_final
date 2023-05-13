@@ -75,7 +75,6 @@ english_name = ["NantouCounty" , "Chiayi" , "ChiayiCounty" , "Keelung" , "YilanC
 
 keyword = {}
 search_imageurl = {}
-search_opentime = {}
 search_website = {}
 search_address = {}
 search_detail = {}
@@ -83,7 +82,6 @@ search_name = {}
 index = {}
 
 favorite_imageurl = {}
-favorite_opentime = {}
 favorite_detail = {}
 favorite_website = {}
 favorite_address = {}
@@ -115,28 +113,26 @@ def get_restaurant_now(user_id):
     spe_search_address = []
     spe_search_name = []
     spe_search_detail = []
-    spe_search_opentime = []
     for i in random_numbers :
+        # # 初始化Nominatim geocoder
+        # geolocator = Nominatim(user_agent="my_app")
+
+        # # 定義經緯度
+        # latitude, longitude = data[i]["Position"]["PositionLat"] , data[i]["Position"]["PositionLon"]
+        # # 透過geolocator.reverse()方法來將經緯度轉換為地址
+        # location = geolocator.reverse(f"{latitude}, {longitude}")
+
         # 輸出轉換後的地址
         spe_search_name.append(search_data[i]["ScenicSpotName"])
-        map_url = "https://www.google.com/maps/place?q=" + search_data[i]["ScenicSpotName"]
-        spe_search_address.append(quote(map_url, safe=':/?=&'))
-        if "PictureUrl1" in search_data[i]["Picture"] :
-            spe_search_imageurl.append(search_data[i]["Picture"]["PictureUrl1"])
-        else :
-            spe_search_imageurl.append("https://i.imgur.com/ElY8WpB.png")
-        if "OpenTime" in search_data[i] :
-            spe_search_opentime.append(search_data[i]["OpenTime"])
-        else :
-            spe_search_opentime.append("無資料")
+        spe_search_address.append("https://www.google.com/maps/place?q=" + search_data[i]["ScenicSpotName"])
+        spe_search_imageurl.append(search_data[i]["Picture"]["PictureUrl1"])
         # spe_search_detail.append(search_data[i]["DescriptionDetail"])
-        # spe_search_detail.append("介紹啦")
+        spe_search_detail.append("介紹啦")
         id += 1
     search_imageurl.update( {user_id : spe_search_imageurl} )
     search_address.update({user_id : spe_search_address})
     search_name.update({user_id : spe_search_name})
     search_detail.update({user_id : spe_search_detail})
-    search_opentime.update({user_id : spe_search_opentime})
     index.update( {user_id : id} )
 
 class TocMachine(GraphMachine):
@@ -170,9 +166,8 @@ class TocMachine(GraphMachine):
             return False
         
     def is_going_to_show_detail(self , event) :
-        text = event.postback.data
-        add_or_delete = text.split(',')[0]
-        return add_or_delete == '了解景點介紹'
+        key = event.message.text
+        return key == "了解景點介紹"
 
     def on_enter_input_key(self, event):
         send_text_message(event.reply_token, '請輸入你現在想去哪裡(請輸入正確的縣市名稱，且"台"請寫"臺"，例如臺北市、澎湖縣等等)')
@@ -216,7 +211,7 @@ class TocMachine(GraphMachine):
         line_bot_api = LineBotApi( channel_access_token )
         line_bot_api.reply_message(reply_token, message_to_reply)
 
-    def on_enter_search_result(self , event):
+    def on_enter_show_search_result(self , event):
         reply_token = event.reply_token
         user_id = event.source.user_id
 
@@ -226,7 +221,6 @@ class TocMachine(GraphMachine):
         # website_array = search_website[user_id]
         detail_array = search_detail[user_id]
         address_array = search_address[user_id]
-        opentime_array = search_opentime[user_id]
 
         if id != 0 :
             message = message_template.site_list
@@ -239,12 +233,11 @@ class TocMachine(GraphMachine):
                 new_message = copy.deepcopy(message_template.site_item)
                 new_message["hero"]["url"] = img_array[i]
                 new_message["body"]["contents"][0]["text"] = name_array[i]
-                new_message["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = opentime_array[i]
-                new_message["footer"]["contents"][0]['action']["uri"] = address_array[i]
+                new_message["body"]["contents"][1]['action']["uri"] = address_array[i]
+                new_message["body"]["contents"][2]['action']["data"] = str(i)
                 # record data
-                new_message["footer"]["contents"][1]['action']["data"] = "加入最愛," + img_array[i] + "," + name_array[i] + "," + address_array[i] + "," + opentime_array[i]
+                new_message["footer"]["contents"][0]['action']["data"] = "加入最愛," + img_array[i] + "," + name_array[i] + "," + address_array[i] + "," + detail_array[i]
                 message["contents"].append(new_message)
-
             message_to_reply = FlexSendMessage("查詢景點資訊", message)
             line_bot_api = LineBotApi( channel_access_token )
             line_bot_api.reply_message(reply_token, message_to_reply)
@@ -264,7 +257,6 @@ class TocMachine(GraphMachine):
         # website_array = search_website[user_id]
         detail_array = search_detail[user_id]
         address_array = search_address[user_id]
-        opentime_array = search_opentime[user_id]
 
         if id != 0 :
             message = message_template.site_list
@@ -277,29 +269,21 @@ class TocMachine(GraphMachine):
                 new_message = copy.deepcopy(message_template.site_item)
                 new_message["hero"]["url"] = img_array[i]
                 new_message["body"]["contents"][0]["text"] = name_array[i]
-                new_message["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = opentime_array[i]
-                new_message["footer"]["contents"][0]['action']["uri"] = address_array[i]
+                new_message["body"]["contents"][1]['action']["uri"] = address_array[i]
+                new_message["body"]["contents"][2]['action']["data"] = str(i)
                 # record data
-                new_message["footer"]["contents"][1]['action']["data"] = "加入最愛," + img_array[i] + "," + name_array[i] + "," + address_array[i] + "," + opentime_array[i]
+                new_message["footer"]["contents"][0]['action']["data"] = "加入最愛," + img_array[i] + "," + name_array[i] + "," + address_array[i] + "," + detail_array[i]
                 message["contents"].append(new_message)
 
+            print(reply_token)
             message_to_reply = FlexSendMessage("查詢景點資訊", message)
             line_bot_api = LineBotApi( channel_access_token )
             line_bot_api.reply_message(reply_token, message_to_reply)
+            print("幹")
         else :
             message_to_reply = FlexSendMessage("查詢景點資訊", message_template.no_result)
             line_bot_api = LineBotApi( channel_access_token )
             line_bot_api.reply_message(reply_token, message_to_reply)
-
-    def on_enter_show_detail(self , event):
-        user_id = event.source.user_id
-        reply_token = event.reply_token
-        detail = event.postback.data.split(',')[1]
-        message = message_template.detail_item
-        message["body"]["contents"][0]["text"] = detail
-        message_to_reply = FlexSendMessage("了解景點介紹", message)
-        line_bot_api = LineBotApi( channel_access_token )
-        line_bot_api.reply_message(reply_token, message_to_reply)
 
     # 加入最愛-----------------------------------------------------------------------
     def is_going_to_add_favorite(self , event):
@@ -313,7 +297,11 @@ class TocMachine(GraphMachine):
         image = event.postback.data.split(',')[1]
         name = event.postback.data.split(',')[2]
         address = event.postback.data.split(',')[3]
-        opentime = event.postback.data.split(',')[4]
+        detail = event.postback.data.split(',')[4]
+        global search_detail
+        global search_address
+        global search_name
+        global search_imageurl
 
         has_data = False
         global favorite_index
@@ -323,16 +311,14 @@ class TocMachine(GraphMachine):
         name_array = []
         img_array = []
         address_array = []
-        opentime_array = []
-        # detail_array = []
+        detail_array = []
         # web_array = []
         if favorite_index.__contains__(user_id):
             index = favorite_index[user_id]
             name_array = favorite_name[user_id]
             img_array = favorite_imageurl[user_id]
             address_array = favorite_address[user_id]
-            opentime_array = favorite_opentime[user_id]
-            # detail_array = favorite_detail[user_id]
+            detail_array = favorite_detail[user_id]
             # web_array = favorite_website[user_id]
 
         for tmp_name in name_array :
@@ -345,8 +331,7 @@ class TocMachine(GraphMachine):
                 img_array.append(image)
                 name_array.append(name)
                 address_array.append(address)
-                opentime_array.append(opentime)
-                # detail_array.append(detail)
+                detail_array.append(detail)
                 # web_array.append(website)
                 index += 1
                 msg = '成功加入我的最愛'
@@ -357,8 +342,7 @@ class TocMachine(GraphMachine):
         # favorite_website.update({user_id : web_array})
         favorite_address.update({user_id : address_array})
         favorite_name.update({user_id : name_array})
-        favorite_opentime.update({user_id : opentime_array})
-        # favorite_detail.update({user_id : detail_array})
+        favorite_detail.update({user_id : detail_array})
         favorite_index.update( {user_id : index} )
 
         message = message_template.add_reply
@@ -382,16 +366,14 @@ class TocMachine(GraphMachine):
         name_array = []
         img_array = []
         address_array = []
-        opentime_array = []
-        # detail_array = []
+        detail_array = []
         # web_array = []
         if favorite_index.__contains__(user_id):
             index = favorite_index[user_id]
             name_array = favorite_name[user_id]
             img_array = favorite_imageurl[user_id]
             address_array = favorite_address[user_id]
-            opentime_array = favorite_opentime[user_id]
-            # detail_array = favorite_detail[user_id]
+            detail_array = favorite_detail[user_id]
             # web_array = favorite_website[user_id]
 
         if index != 0 :
@@ -405,10 +387,10 @@ class TocMachine(GraphMachine):
                 new_message = copy.deepcopy(message_template.favorite_item)
                 new_message["hero"]["url"] = img_array[i]
                 new_message["body"]["contents"][0]["text"] = name_array[i]
-                new_message["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = opentime_array[i]
-                new_message["footer"]["contents"][0]['action']["uri"] = address_array[i]
+                new_message["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = address_array[i]
+                new_message["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = detail_array[i]
                 # record data
-                new_message["footer"]["contents"][1]['action']["data"] = "從我的最愛移除," + name_array[i]
+                new_message["footer"]["contents"][0]['action']["data"] = "從我的最愛移除," + name_array[i]
                 message["contents"].append(new_message)
             message_to_reply = FlexSendMessage("查詢我的最愛", message)
             line_bot_api = LineBotApi( channel_access_token )
@@ -438,8 +420,7 @@ class TocMachine(GraphMachine):
         name_array = []
         img_array = []
         address_array = []
-        opentime_array = []
-        # detail_array = []
+        detail_array = []
         item_index = -1
         # web_array = []
         if favorite_index.__contains__(user_id):
@@ -447,8 +428,7 @@ class TocMachine(GraphMachine):
             name_array = favorite_name[user_id]
             img_array = favorite_imageurl[user_id]
             address_array = favorite_address[user_id]
-            opentime_array = favorite_opentime[user_id]
-            # detail_array = favorite_detail[user_id]
+            detail_array = favorite_detail[user_id]
             # web_array = favorite_website[user_id]
 
         for tmp_name in name_array :
@@ -461,8 +441,7 @@ class TocMachine(GraphMachine):
                 img_array.pop(item_index)
                 name_array.pop(item_index)
                 address_array.pop(item_index)
-                opentime_array.pop(item_index)
-                # detail_array.pop(item_index)
+                detail_array.pop(item_index)
                 # web_array.pop(item_index)
                 index -= 1
                 msg = '成功從我的最愛中移除'
@@ -475,13 +454,12 @@ class TocMachine(GraphMachine):
         # favorite_website.update({user_id : web_array})
         favorite_address.update({user_id : address_array})
         favorite_name.update({user_id : name_array})
-        favorite_opentime.update({user_id : opentime_array})
-        # favorite_detail.update({user_id : detail_array})
+        favorite_detail.update({user_id : detail_array})
         favorite_index.update( {user_id : index} )
 
         message = message_template.delete_reply
         message["body"]["contents"][0]["text"] = msg
-        message_to_reply = FlexSendMessage("從我的最愛移除", message)
+        message_to_reply = FlexSendMessage("加入最愛", message)
         line_bot_api = LineBotApi( channel_access_token )
         line_bot_api.reply_message(reply_token, message_to_reply)
     # ----------------------------------------------------------------------------------------------------
